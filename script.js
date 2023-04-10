@@ -23,6 +23,7 @@ window.addEventListener('load', function () {
 			//устанавливаем начальную скорость игрока
 			this.speedX = 0;
 			this.speedY = 0;
+			this.speedModifier = 20;
 		}
 		//рисует игрок
 		draw(context) {
@@ -48,11 +49,27 @@ window.addEventListener('load', function () {
 		}
 		update() {
 			//движение линии за объектом
-			this.speedX = (this.game.mouse.x - this.collisionX) / 20;
-			this.speedY = (this.game.mouse.y - this.collisionY) / 20;
+			//ось x
+			this.dx = this.game.mouse.x - this.collisionX;
+			//ось y
+			this.dy = this.game.mouse.y - this.collisionY;
+			//постоянная скорость героя
+			//высчитываеи гипотенузу
+			const distance = Math.hypot(this.dy, this.dx);
 
-			this.collisionX += this.speedX;
-			this.collisionY += this.speedY;
+
+			if (distance > this.speedModifier) {
+				this.speedX = this.dx / distance || 0;
+				this.speedY = this.dy / distance || 0;
+			} else {
+				this.speedX = 0;
+				this.speedY = 0;
+			}
+
+
+
+			this.collisionX += this.speedX * this.speedModifier;
+			this.collisionY += this.speedY * this.speedModifier;
 		}
 	}
 
@@ -83,8 +100,12 @@ window.addEventListener('load', function () {
 			});
 			//получаем координаты мыши при передвижении
 			canvas.addEventListener('mousemove', (e) => {
-				this.mouse.x = e.offsetX;
-				this.mouse.y = e.offsetY;
+				//обновлять положение мыши талько в том случае если мышь нажата
+				if (this.mouse.pressed) {
+					this.mouse.x = e.offsetX;
+					this.mouse.y = e.offsetY;
+				}
+
 
 
 			});
