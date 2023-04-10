@@ -78,9 +78,20 @@ window.addEventListener('load', function () {
 			this.game = game;
 			this.collisionX = Math.random() * this.game.width;
 			this.collisionY = Math.random() * this.game.width;
-			this.collisionRadius = 100;
+			this.collisionRadius = 60;
+			//добавляем спрайт
+			this.image = document.getElementById('obstacles');
+			this.spriteWidth = 250;
+			this.spriteHeight = 250;
+			this.width = this.spriteWidth;
+			this.height = this.spriteHeight;
+			//центруем героя по картинке
+			this.spriteX = this.collisionX - this.width * 0.5;
+			this.spriteY = this.collisionY - this.height * 0.5 - 70;
 		}
 		draw(context) {
+			// рисуем изображение в точках коллизии(рисунок)(рисунок.позиц x,позиц y,ширина.высота.координаты.
+			context.drawImage(this.image, 0, 0, this.spriteHeight, this.spriteWidth, this.spriteX, this.spriteY, this.width, this.height);
 			//запускает новый путь, очищая список вложенных путей.
 			context.beginPath();
 			//Метод Canvas 2D API добавляет дугу окружности к текущему подпути.
