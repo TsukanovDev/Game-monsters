@@ -73,6 +73,38 @@ window.addEventListener('load', function () {
 		}
 	}
 
+	class Obstacle {
+		constructor(game) {
+			this.game = game;
+			this.collisionX = Math.random() * this.game.width;
+			this.collisionY = Math.random() * this.game.width;
+			this.collisionRadius = 100;
+		}
+		draw(context) {
+			//запускает новый путь, очищая список вложенных путей.
+			context.beginPath();
+			//Метод Canvas 2D API добавляет дугу окружности к текущему подпути.
+			context.arc(this.collisionX, this.collisionY, this.collisionRadius, 0, Math.PI * 2);
+			//Если путь не закрыт, метод fill() добавит линию от последней точки до начальной точки пути, 
+			//чтобы закрыть путь (как closePath()), а затем заполнит путь.
+			context.save();//сохраняем свойства fill
+			context.globalAlpha = 0.5;
+			context.fill();
+			context.restore();//отменяем свойства globalAlpha в дальнейшем
+			context.stroke();
+			//начинаем путь
+			//context.beginPath();
+			//линия начинается с координаты игрока
+			//context.moveTo(this.collisionX, this.collisionY);
+			//context.lineTo(this.game.mouse.x, this.game.mouse.y);
+			//РИСУЕМ ЛИНИЮ
+			//context.stroke();
+		}
+	}
+
+
+
+
 
 	class Game {
 		constructor(canvas) {
@@ -80,6 +112,12 @@ window.addEventListener('load', function () {
 			this.width = this.canvas.width;
 			this.height = this.canvas.height;
 			this.player = new Player(this);
+			//начальное количесво припятствий
+			this.numberOfObstscles = 5;
+			this.obstacles = [];
+
+
+
 			this.mouse = {
 				x: this.width * 0.5,
 				y: this.height * 0.5,
@@ -114,11 +152,18 @@ window.addEventListener('load', function () {
 		render(context) {
 			this.player.draw(context);
 			this.player.update();
+			this.obstacles.forEach(obstacle => obstacle.draw(context));
+		}
+		// берём массив и добавляем в конец новое препятствие
+		init() {
+			for (let i = 0; i < this.numberOfObstscles; i++)
+				this.obstacles.push(new Obstacle(this));
 		}
 	}
 
 	const game = new Game(canvas);
-
+	game.init();
+	console.log(game);
 
 
 	function animate() {
