@@ -23,7 +23,7 @@ window.addEventListener('load', function () {
 			//устанавливаем начальную скорость игрока
 			this.speedX = 0;
 			this.speedY = 0;
-			this.speedModifier = 20;
+			this.speedModifier = 5;
 		}
 		//рисует игрок
 		draw(context) {
@@ -74,9 +74,23 @@ window.addEventListener('load', function () {
 			//берём массив из obstacles перебираем его в функции obstacle
 			//выводим в консоль метод checkCollision
 			this.game.obstacles.forEach(obstacle => {
-				if (this.game.checkCollision(this, obstacle)) {
-					console.log('Collision');
-				};
+				//[(distance < sumOfRadii), distance, sumOfRadii, dx, dy];
+				//применяем диструктуризацию массива
+				let [collision, distance, sumOfRadii, dx, dy] = this.game.checkCollision(this, obstacle);
+				//создаём переменную со значением индекса this.game.checkCollision
+
+				//let collision1 = game.checkCollision(this, obstacle)[0];
+				//let distance = game.checkCollision(this, obstacle)[1];
+
+				//выталкиеваем курсор на один пиксель за радиус круга препятствия
+				if (collision) {
+					const unit_y = dx / distance;
+					const unit_x = dy / distance;
+					this.collisionX = obstacle.collisionX +
+						(sumOfRadii + 1) * unit_x;
+					this.collisionY = obstacle.collisionY +
+						(sumOfRadii + 1) * unit_y;
+				}
 			})
 		}
 	}
@@ -172,9 +186,10 @@ window.addEventListener('load', function () {
 		}
 		//метод обновляем и рисуем все объекты в игре
 		render(context) {
+			this.obstacles.forEach(obstacle => obstacle.draw(context));
 			this.player.draw(context);
 			this.player.update();
-			this.obstacles.forEach(obstacle => obstacle.draw(context));
+
 		}
 
 		//метод проверки столновений принимает объекты a,b вернёт true or false
@@ -182,9 +197,10 @@ window.addEventListener('load', function () {
 		checkCollision(a, b) {
 			const dx = a.collisionX - b.collisionX;
 			const dy = a.collisionY - b.collisionY;
-			const distance = Math.hypot(dx, dy);
+			const distance = Math.hypot(dy, dx);
 			const sumOfRadii = a.collisionRadius + b.collisionRadius;
-			return (distance < sumOfRadii);
+			//возвращаем массив правда или лож, возвращаем дистанцию 185
+			return [(distance < sumOfRadii), distance, sumOfRadii, dx, dy];
 		}
 
 
