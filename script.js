@@ -70,6 +70,14 @@ window.addEventListener('load', function () {
 
 			this.collisionX += this.speedX * this.speedModifier;
 			this.collisionY += this.speedY * this.speedModifier;
+
+			//берём массив из obstacles перебираем его в функции obstacle
+			//выводим в консоль метод checkCollision
+			this.game.obstacles.forEach(obstacle => {
+				if (this.game.checkCollision(this, obstacle)) {
+					console.log('Collision');
+				};
+			})
 		}
 	}
 
@@ -168,6 +176,19 @@ window.addEventListener('load', function () {
 			this.player.update();
 			this.obstacles.forEach(obstacle => obstacle.draw(context));
 		}
+
+		//метод проверки столновений принимает объекты a,b вернёт true or false
+
+		checkCollision(a, b) {
+			const dx = a.collisionX - b.collisionX;
+			const dy = a.collisionY - b.collisionY;
+			const distance = Math.hypot(dx, dy);
+			const sumOfRadii = a.collisionRadius + b.collisionRadius;
+			return (distance < sumOfRadii);
+		}
+
+
+
 		// берём массив и добавляем в конец новое препятствие
 		init() {
 			//for (let i = 0; i < this.numberOfObstscles; i++)
