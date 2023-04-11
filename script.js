@@ -88,10 +88,14 @@ window.addEventListener('load', function () {
 			//центруем героя по картинке
 			this.spriteX = this.collisionX - this.width * 0.5;
 			this.spriteY = this.collisionY - this.height * 0.5 - 70;
+
+
+			this.frameX = Math.floor(Math.random() * 4);
+			this.frameY = Math.floor(Math.random() * 3);
 		}
 		draw(context) {
 			// рисуем изображение в точках коллизии(рисунок)(рисунок.позиц x,позиц y,ширина.высота.координаты.
-			context.drawImage(this.image, 0, 0, this.spriteHeight, this.spriteWidth, this.spriteX, this.spriteY, this.width, this.height);
+			context.drawImage(this.image, this.frameX * this.spriteWidth, this.frameY * this.spriteHeight, this.spriteHeight, this.spriteWidth, this.spriteX, this.spriteY, this.width, this.height);
 			//запускает новый путь, очищая список вложенных путей.
 			context.beginPath();
 			//Метод Canvas 2D API добавляет дугу окружности к текущему подпути.
@@ -122,6 +126,7 @@ window.addEventListener('load', function () {
 			this.canvas = canvas;
 			this.width = this.canvas.width;
 			this.height = this.canvas.height;
+			this.topMargin = 260;
 			this.player = new Player(this);
 			//начальное количесво припятствий
 			this.numberOfObstscles = 10;
@@ -177,12 +182,18 @@ window.addEventListener('load', function () {
 					const dx = testObstacle.collisionX - obstacle.collisionX;
 					const dy = testObstacle.collisionY - obstacle.collisionY;
 					const distance = Math.hypot(dy, dx);
-					const sumOfRadii = testObstacle.collisionRadius + obstacle.collisionRadius;
+					const distanceBuffed = 150;
+					const sumOfRadii = testObstacle.collisionRadius + obstacle.collisionRadius + distanceBuffed;
 					if (distance < sumOfRadii) {
 						overlap = true;
 					}
 				});
-				if (!overlap) {
+				const margin = testObstacle.collisionRadius * 2;
+				if (!overlap && testObstacle.spriteX > 0 &&
+					testObstacle.spriteX < this.width -
+					testObstacle.width && testObstacle.collisionY >
+					this.topMargin + margin &&
+					testObstacle.collisionY < this.height - margin) {
 					this.obstacles.push(testObstacle);
 				}
 				attemps++;
@@ -203,3 +214,5 @@ window.addEventListener('load', function () {
 	}
 	animate();
 });
+
+49.13
