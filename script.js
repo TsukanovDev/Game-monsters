@@ -43,25 +43,30 @@ window.addEventListener('load', function () {
 		}
 		//рисует игрок
 		draw(context) {
-			context.drawImage(this.image, this.frameX * this.spriteWidth, this.frameY * this.spriteHeight, this.spriteWidth, this.spriteHeight, this.spriteX, this.spriteY, this.width, this.height);
-			//запускает новый путь, очищая список вложенных путей.
-			context.beginPath();
-			//Метод Canvas 2D API добавляет дугу окружности к текущему подпути.
-			context.arc(this.collisionX, this.collisionY, this.collisionRadius, 0, Math.PI * 2);
-			//Если путь не закрыт, метод fill() добавит линию от последней точки до начальной точки пути, 
-			//чтобы закрыть путь (как closePath()), а затем заполнит путь.
-			context.save();//сохраняем свойства fill
-			context.globalAlpha = 0.5;
-			context.fill();
-			context.restore();//отменяем свойства globalAlpha в дальнейшем
-			context.stroke();
-			//начинаем путь
-			context.beginPath();
-			//линия начинается с координаты игрока
-			context.moveTo(this.collisionX, this.collisionY);
-			context.lineTo(this.game.mouse.x, this.game.mouse.y);
-			//РИСУЕМ ЛИНИЮ
-			context.stroke();
+			context.drawImage(this.image, this.frameX * this.spriteWidth,
+				this.frameY * this.spriteHeight, this.spriteWidth, this.spriteHeight, this.spriteX,
+				this.spriteY, this.width, this.height);
+			if (this.game.debug) {
+				//запускает новый путь, очищая список вложенных путей.
+				context.beginPath();
+				//Метод Canvas 2D API добавляет дугу окружности к текущему подпути.
+				context.arc(this.collisionX, this.collisionY, this.collisionRadius, 0, Math.PI * 2);
+				//Если путь не закрыт, метод fill() добавит линию от последней точки до начальной точки пути, 
+				//чтобы закрыть путь (как closePath()), а затем заполнит путь.
+				context.save();//сохраняем свойства fill
+				context.globalAlpha = 0.5;
+				context.fill();
+				context.restore();//отменяем свойства globalAlpha в дальнейшем
+				context.stroke();
+				//начинаем путь
+				context.beginPath();
+				//линия начинается с координаты игрока
+				context.moveTo(this.collisionX, this.collisionY);
+				context.lineTo(this.game.mouse.x, this.game.mouse.y);
+				//РИСУЕМ ЛИНИЮ
+				context.stroke();
+			}
+
 
 		}
 		update() {
@@ -86,7 +91,7 @@ window.addEventListener('load', function () {
 			else if (angle < 2.74) this.frameY = 5;
 
 
-			console.log(angle);
+
 
 
 
@@ -139,7 +144,7 @@ window.addEventListener('load', function () {
 			this.game = game;
 			this.collisionX = Math.random() * this.game.width;
 			this.collisionY = Math.random() * this.game.width;
-			this.collisionRadius = 60;
+			this.collisionRadius = 40;
 			//добавляем спрайт
 			this.image = document.getElementById('obstacles');
 			this.spriteWidth = 250;
@@ -156,25 +161,29 @@ window.addEventListener('load', function () {
 		}
 		draw(context) {
 			// рисуем изображение в точках коллизии(рисунок)(рисунок.позиц x,позиц y,ширина.высота.координаты.
-			context.drawImage(this.image, this.frameX * this.spriteWidth, this.frameY * this.spriteHeight, this.spriteHeight, this.spriteWidth, this.spriteX, this.spriteY, this.width, this.height);
-			//запускает новый путь, очищая список вложенных путей.
-			context.beginPath();
-			//Метод Canvas 2D API добавляет дугу окружности к текущему подпути.
-			context.arc(this.collisionX, this.collisionY, this.collisionRadius, 0, Math.PI * 2);
-			//Если путь не закрыт, метод fill() добавит линию от последней точки до начальной точки пути, 
-			//чтобы закрыть путь (как closePath()), а затем заполнит путь.
-			context.save();//сохраняем свойства fill
-			context.globalAlpha = 0.5;
-			context.fill();
-			context.restore();//отменяем свойства globalAlpha в дальнейшем
-			context.stroke();
-			//начинаем путь
-			//context.beginPath();
-			//линия начинается с координаты игрока
-			//context.moveTo(this.collisionX, this.collisionY);
-			//context.lineTo(this.game.mouse.x, this.game.mouse.y);
-			//РИСУЕМ ЛИНИЮ
-			//context.stroke();
+			context.drawImage(this.image, this.frameX * this.spriteWidth, this.frameY * this.spriteHeight,
+				this.spriteHeight, this.spriteWidth, this.spriteX, this.spriteY, this.width, this.height);
+			if (this.game.debug) {
+				//запускает новый путь, очищая список вложенных путей.
+				context.beginPath();
+				//Метод Canvas 2D API добавляет дугу окружности к текущему подпути.
+				context.arc(this.collisionX, this.collisionY, this.collisionRadius, 0, Math.PI * 2);
+				//Если путь не закрыт, метод fill() добавит линию от последней точки до начальной точки пути, 
+				//чтобы закрыть путь (как closePath()), а затем заполнит путь.
+				context.save();//сохраняем свойства fill
+				context.globalAlpha = 0.5;
+				context.fill();
+				context.restore();//отменяем свойства globalAlpha в дальнейшем
+				context.stroke();
+				//начинаем путь
+				//context.beginPath();
+				//линия начинается с координаты игрока
+				//context.moveTo(this.collisionX, this.collisionY);
+				//context.lineTo(this.game.mouse.x, this.game.mouse.y);
+				//РИСУЕМ ЛИНИЮ
+				//context.stroke();
+			}
+
 		}
 	}
 
@@ -188,6 +197,7 @@ window.addEventListener('load', function () {
 			this.width = this.canvas.width;
 			this.height = this.canvas.height;
 			this.topMargin = 260;
+			this.debug = true;
 			this.player = new Player(this);
 			//начальное количесво припятствий
 			this.numberOfObstscles = 10;
@@ -219,9 +229,11 @@ window.addEventListener('load', function () {
 					this.mouse.y = e.offsetY;
 				}
 
-
-
 			});
+			window.addEventListener('keydown', e => {
+				if (e.key == 'd') this.debug = !this.debug;
+
+			})
 		}
 		//метод обновляем и рисуем все объекты в игре
 		render(context) {
