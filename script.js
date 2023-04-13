@@ -199,7 +199,47 @@ window.addEventListener('load', function () {
 		}
 	}
 
+	class Egg {
+		constructor(game) {
+			this.game = game;
+			//позиция яйца случайным образом определяется на экране
+			this.collisionX = Math.random() * this.game.width;
+			this.collisionY = Math.random() * this.game.width;
+			this.collisionRadius = 40;
+			this.image = document.getElementById('egg');
+			this.spriteWidth = 110;
+			this.spriteHeight = 135;
+			this.width = this.spriteWidth;
+			this.height = this.spriteHeight;
+			//верхний левый угол яйца
+			this.spriteX = this.collisionX + this.width * 0.5;
+			this.spriteY = this.collisionY + this.width * 0.5;
+		}
+		draw(context) {
+			context.drawImage(this.image, this.spriteX, this.spriteY);
+			if (this.game.debug) {
+				//запускает новый путь, очищая список вложенных путей.
+				context.beginPath();
+				//Метод Canvas 2D API добавляет дугу окружности к текущему подпути.
+				context.arc(this.collisionX, this.collisionY, this.collisionRadius, 0, Math.PI * 2);
+				//Если путь не закрыт, метод fill() добавит линию от последней точки до начальной точки пути, 
+				//чтобы закрыть путь (как closePath()), а затем заполнит путь.
+				context.save();//сохраняем свойства fill
+				context.globalAlpha = 0.5;
+				context.fill();
+				context.restore();//отменяем свойства globalAlpha в дальнейшем
+				context.stroke();
+				//начинаем путь
+				context.beginPath();
+				//линия начинается с координаты игрока
+				context.moveTo(this.collisionX, this.collisionY);
+				context.lineTo(this.game.mouse.x, this.game.mouse.y);
+				//РИСУЕМ ЛИНИЮ
+				context.stroke();
+			}
+		}
 
+	}
 
 
 
@@ -217,7 +257,10 @@ window.addEventListener('load', function () {
 			this.interval = 1000 / this.fps;
 			//начальное количесво припятствий
 			this.numberOfObstscles = 10;
+			this.maxOfEggs = 10;
 			this.obstacles = [];
+			//объекты яйца
+			this.eggs = []
 
 			this.mouse = {
 				x: this.width * 0.5,
@@ -278,7 +321,9 @@ window.addEventListener('load', function () {
 			return [(distance < sumOfRadii), distance, sumOfRadii, dx, dy];
 		}
 
+		addEgg() {
 
+		}
 
 		// берём массив и добавляем в конец новое препятствие
 		init() {
