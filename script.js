@@ -202,18 +202,20 @@ window.addEventListener('load', function () {
 	class Egg {
 		constructor(game) {
 			this.game = game;
-			//позиция яйца случайным образом определяется на экране
-			this.collisionX = Math.random() * this.game.width;
-			this.collisionY = Math.random() * this.game.width;
 			this.collisionRadius = 40;
+			this.margin = this.collisionRadius * 2;
+			//позиция яйца случайным образом определяется на экране
+			this.collisionX = this.margin + (Math.random() * (this.game.width - this.margin * 2));
+			this.collisionY = this.game.topMargin + (Math.random() * (this.game.height - this.game.topMargin - this.margin));
+
 			this.image = document.getElementById('egg');
 			this.spriteWidth = 110;
 			this.spriteHeight = 135;
 			this.width = this.spriteWidth;
 			this.height = this.spriteHeight;
 			//верхний левый угол яйца
-			this.spriteX = this.collisionX + this.width * 0.5;
-			this.spriteY = this.collisionY + this.width * 0.5;
+			this.spriteX = this.collisionX - this.width * 0.5;
+			this.spriteY = this.collisionY - this.width * 0.5 - 30;
 		}
 		draw(context) {
 			context.drawImage(this.image, this.spriteX, this.spriteY);
@@ -235,7 +237,7 @@ window.addEventListener('load', function () {
 				context.moveTo(this.collisionX, this.collisionY);
 				context.lineTo(this.game.mouse.x, this.game.mouse.y);
 				//РИСУЕМ ЛИНИЮ
-				context.stroke();
+				//context.stroke();
 			}
 		}
 
@@ -255,6 +257,8 @@ window.addEventListener('load', function () {
 			this.fps = 70;
 			this.timer = 0;
 			this.interval = 1000 / this.fps;
+			this.eggTimer = 0;
+			this.eggInterval = 500;
 			//начальное количесво припятствий
 			this.numberOfObstscles = 10;
 			this.maxOfEggs = 10;
@@ -301,12 +305,22 @@ window.addEventListener('load', function () {
 				context.clearRect(0, 0, this.width, this.height);
 				//animate next frame
 				this.obstacles.forEach(obstacle => obstacle.draw(context));
+				this.eggs.forEach(egg => egg.draw(context));
 				this.player.draw(context);
 				this.player.update();
 				this.timer = 0;
 
 			}
 			this.timer += deltaTime;
+			//add Eggs periodicaly
+			if (this.eggTimer > this.eggInterval && this.eggs.length < this.maxOfEggs) {
+				this.addEgg();
+				this.eggTimer = 0;
+				console.log(this.eggs);
+			} else {
+				this.eggTimer += deltaTime;
+			}
+
 
 		}
 
@@ -322,7 +336,7 @@ window.addEventListener('load', function () {
 		}
 
 		addEgg() {
-
+			this.eggs.push(new Egg(this));
 		}
 
 		// берём массив и добавляем в конец новое препятствие
