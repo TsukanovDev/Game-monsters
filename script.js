@@ -214,8 +214,8 @@ window.addEventListener('load', function () {
 			this.width = this.spriteWidth;
 			this.height = this.spriteHeight;
 			//верхний левый угол яйца
-			this.spriteX = this.collisionX - this.width * 0.5;
-			this.spriteY = this.collisionY - this.width * 0.5 - 30;
+			this.spriteX;
+			this.spriteY;
 		}
 		draw(context) {
 			context.drawImage(this.image, this.spriteX, this.spriteY);
@@ -240,7 +240,28 @@ window.addEventListener('load', function () {
 				//context.stroke();
 			}
 		}
+		update() {
+			this.spriteX = this.collisionX - this.width * 0.5;
+			this.spriteY = this.collisionY - this.width * 0.5 - 30;
+			//Оператор spread позволяет расширять выражения в тех местах, 
+			//где предусмотрено использование нескольких аргументов.
+			let collisionObject = [this.game.player, ...this.game.obstacles];
+			collisionObject.forEach(Object => {
+				let [collision, distance, sumOfRadii, dx, dy] =
+					this.game.checkCollision(this, Object);
+				// проверяем столкновение героя и объекта
+				if (collision) {
+					const unit_x = dx / distance;
+					const unit_y = dy / distance;
+					this.collisionX = Object.collisionX +
+						(sumOfRadii + 1) * unit_x;
+					this.collisionY = Object.collisionY +
+						(sumOfRadii + 1) * unit_y;
 
+				}
+			})
+
+		}
 	}
 
 
@@ -305,7 +326,11 @@ window.addEventListener('load', function () {
 				context.clearRect(0, 0, this.width, this.height);
 				//animate next frame
 				this.obstacles.forEach(obstacle => obstacle.draw(context));
-				this.eggs.forEach(egg => egg.draw(context));
+				this.eggs.forEach(egg => {
+					// перемещаем яйца героем
+					egg.draw(context);
+					egg.update();
+				});
 				this.player.draw(context);
 				this.player.update();
 				this.timer = 0;
