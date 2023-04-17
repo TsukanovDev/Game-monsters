@@ -197,6 +197,8 @@ window.addEventListener('load', function () {
 			}
 
 		}
+		update() {
+		}
 	}
 
 	class Egg {
@@ -273,6 +275,7 @@ window.addEventListener('load', function () {
 			this.height = this.canvas.height;
 			this.topMargin = 260;
 			this.debug = true;
+
 			this.player = new Player(this);
 			//fps
 			this.fps = 70;
@@ -286,6 +289,7 @@ window.addEventListener('load', function () {
 			this.obstacles = [];
 			//объекты яйца
 			this.eggs = []
+			this.gameObjects = [];
 
 			this.mouse = {
 				x: this.width * 0.5,
@@ -324,16 +328,28 @@ window.addEventListener('load', function () {
 			//управляем логикой фпс
 			if (this.timer > this.interval) {
 				context.clearRect(0, 0, this.width, this.height);
-				//animate next frame
-				this.obstacles.forEach(obstacle => obstacle.draw(context));
-				this.eggs.forEach(egg => {
-					// перемещаем яйца героем
-					egg.draw(context);
-					egg.update();
-				});
+
+
+				//this.gameObjects = [...this.player, ...this.eggs, ...this.obstacles];
+
+				//this.gameObjects.forEach(Object => {
+				//	Object.draw(context);
+				//	Object.update();
+				//});
+
 				this.player.draw(context);
 				this.player.update();
 				this.timer = 0;
+
+				this.eggs.forEach(egg => {
+					egg.draw(context);
+					egg.update();
+				})
+				//animate next frame	
+				this.obstacles.forEach(obstacle => obstacle.draw(context));
+				// перемещаем яйца героем
+
+
 
 			}
 			this.timer += deltaTime;
@@ -395,6 +411,8 @@ window.addEventListener('load', function () {
 				attemps++;
 			}
 		}
+		update() {
+		}
 	}
 
 	const game = new Game(canvas);
@@ -414,4 +432,4 @@ window.addEventListener('load', function () {
 	animate(0);
 });
 
-49.13
+//1: 56
